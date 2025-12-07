@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Create temporary tables used only for loading CSV data -->
+    <changeSet id="2025011235800" author="matera-bs">
+        <createTable tableName="PLATAFORMA_NG_HOTEIS_TMP">
+            <column name="ID" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PLATAFORMA" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_PLATAFORMA" type="VARCHAR(64)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025011235801" author="matera-bs">
+        <createTable tableName="PLATAFORMA_NG_OFERTAS_HOSPEDAGEM_TMP">
+            <column name="ID" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="CODIGO_PROMOCAO" type="VARCHAR(64)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Load plataforma NG hoteis CSV into temporary table -->
+    <changeSet id="2025011235802" author="matera-bs">
+        <loadData file="20252509-plataforma-ng-hoteis.csv"
+                  tableName="PLATAFORMA_NG_HOTEIS_TMP"
+                  relativeToChangelogFile="true">
+            <column name="ID" type="CHAR(36)"/>
+            <column name="PLATAFORMA" type="STRING"/>
+            <column name="ID_PLATAFORMA" type="STRING"/>
+        </loadData>
+    </changeSet>
+
+    <!-- Load plataforma NG ofertas hospedagem CSV into temporary table -->
+    <changeSet id="2025011235803" author="matera-bs">
+        <loadData file="20252509-plataforma-ng-ofertas-hospedagem.csv"
+                  tableName="PLATAFORMA_NG_OFERTAS_HOSPEDAGEM_TMP"
+                  relativeToChangelogFile="true">
+            <column name="ID" type="CHAR(36)"/>
+            <column name="CODIGO_PROMOCAO" type="STRING"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="20251002004400" author="dev">
+        <sql>INSERT INTO OFERTA_HOSPEDAGEM_PLATAFORMA_MAPPING (
+                select ong.ID, 'NG', hpt.ID_PLATAFORMA as CODIGO_HOTEL, ong.CODIGO_PROMOCAO as CODIGO_PROMOCAO  from PLATAFORMA_NG_OFERTAS_HOSPEDAGEM_TMP ong
+                   left join OFERTA_HOSPEDAGEM oh on ong.ID = oh.ID
+                   left join HOTEL_PARCEIRO hp on hp.ID = oh.HOTEL_PARCEIRO_ID
+                   left join PLATAFORMA_NG_HOTEIS_TMP hpt on hpt.ID = hp.ID
+             )
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251002005300" author="dev">
+        <sql>INSERT INTO OFERTA_HOSPEDAGEM_PLATAFORMA_MAPPING (
+                with OFERTA_HOSPEDAGEM_REGULAR as (select * from OFERTA_HOSPEDAGEM oh where oh.ID not in (select id from OFERTA_HOSPEDAGEM_PLATAFORMA_MAPPING))
+                select ohr.ID as ID, 'REGULAR', hp.ID_PLATAFORMA as CODIGO_PLATAFORMA, NULL as CODIGO_PROMOCAO
+                    from OFERTA_HOSPEDAGEM_REGULAR ohr
+                    left join HOTEL_PARCEIRO hp on hp.ID = ohr.HOTEL_PARCEIRO_ID
+            )
+        </sql>
+    </changeSet>
+
+
+
+
+</databaseChangeLog>

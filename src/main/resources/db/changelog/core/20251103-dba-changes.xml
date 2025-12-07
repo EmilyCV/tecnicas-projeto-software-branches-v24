@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20251103235100" author="dev">
+        <addColumn tableName="PACOTE">
+            <column name="INICIO_VALIDADE" type="DATE"/>
+        </addColumn>
+        <addColumn tableName="PACOTE">
+            <column name="FIM_VALIDADE" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="20251103235200" author="dev">
+        <addColumn tableName="CONTRATACAO">
+            <column name="INICIO_PERIODO_VIAGEM" type="DATE"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="FIM_PERIODO_VIAGEM" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251103235300" author="dev">
+        <sql>update PACOTE pa, PERIODO p
+             set pa.INICIO_VALIDADE = p.INICIO,
+                 pa.FIM_VALIDADE = p.FIM
+             where pa.VALIDADE_ID = p.ID
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251103235400" author="dev">
+        <sql>update CONTRATACAO c, PERIODO p
+             set c.INICIO_PERIODO_VIAGEM = p.INICIO,
+                 c.FIM_PERIODO_VIAGEM = p.FIM
+             where c.PERIODO_VIAGEM_ID = p.ID
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251103235500" author="dev">
+        <dropForeignKeyConstraint baseTableName="PACOTE" constraintName="FK_PACOTE_PERIODO"/>
+        <dropColumn tableName="PACOTE" columnName="VALIDADE_ID"/>
+    </changeSet>
+
+    <changeSet id="20251103235600" author="dev">
+        <dropForeignKeyConstraint baseTableName="CONTRATACAO" constraintName="FK_COMPRA_PERIODO_VIAGEM"/>
+        <dropColumn tableName="CONTRATACAO" columnName="PERIODO_VIAGEM_ID"/>
+    </changeSet>
+
+    <changeSet id="20251103235630" author="dev">
+        <dropTable tableName="PERIODO"/>
+    </changeSet>
+
+
+    <changeSet id="20251104001700" author="dev">
+        <addColumn tableName="OFERTA_TRANSLADO_AEREO">
+            <column name="VOO_IDA_NUMERO" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="OFERTA_TRANSLADO_AEREO">
+            <column name="VOO_IDA_HORARIO" type="TIME"/>
+        </addColumn>
+        <addColumn tableName="OFERTA_TRANSLADO_AEREO">
+            <column name="VOO_VOLTA_NUMERO" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="OFERTA_TRANSLADO_AEREO">
+            <column name="VOO_VOLTA_HORARIO" type="TIME"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251104001800" author="dev">
+        <addColumn tableName="RESERVA_VOO">
+            <column name="NUMERO_VOO" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="RESERVA_VOO">
+            <column name="HORARIO_VOO" type="TIME"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251104001900" author="dev">
+        <sql>update OFERTA_TRANSLADO_AEREO ota, DADOS_VOO ida, DADOS_VOO volta
+                set ota.VOO_IDA_NUMERO = ida.NUMERO,
+                    ota.VOO_IDA_HORARIO = ida.HORARIO,
+                    ota.VOO_VOLTA_NUMERO = volta.NUMERO,
+                    ota.VOO_VOLTA_HORARIO = volta.HORARIO
+             where ota.VOO_IDA_ID = ida.ID and
+                   ota.VOO_VOLTA_ID = volta.ID
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251104002100" author="dev">
+        <sql>update RESERVA_VOO rv, DADOS_VOO v
+             set rv.NUMERO_VOO = v.NUMERO,
+                 rv.HORARIO_VOO = v.HORARIO
+             where rv.DADOS_VOO_ID = v.ID
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251104002600" author="dev">
+        <dropForeignKeyConstraint baseTableName="OFERTA_TRANSLADO_AEREO" constraintName="FK_OFERTA_TRANSLADO_AEREO_VOO_IDA"/>
+        <dropColumn tableName="OFERTA_TRANSLADO_AEREO" columnName="VOO_IDA_ID"/>
+        <dropForeignKeyConstraint baseTableName="OFERTA_TRANSLADO_AEREO" constraintName="FK_OFERTA_TRANSLADO_AEREO_VOO_VOLTA"/>
+        <dropColumn tableName="OFERTA_TRANSLADO_AEREO" columnName="VOO_VOLTA_ID"/>
+    </changeSet>
+
+    <changeSet id="20251104002630" author="dev">
+        <dropForeignKeyConstraint baseTableName="RESERVA_VOO" constraintName="FK_RESERVA_VOO_DADOS_VOO"/>
+        <dropColumn tableName="RESERVA_VOO" columnName="DADOS_VOO_ID"/>
+    </changeSet>
+
+    <changeSet id="20251104002645" author="dev">
+        <dropTable tableName="DADOS_VOO"/>
+    </changeSet>
+
+    <changeSet id="20251104005400" author="dev">
+        <addColumn tableName="CONTRATACAO">
+            <column name="ETICKET_RESERVA_IDA" type="VARCHAR(25)"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="ASSENTO_RESERVA_IDA" type="CHAR(4)"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="HORARIO_EMBARQUE_RESERVA_IDA" type="DATETIME"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="NUMERO_VOO_RESERVA_IDA" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="HORARIO_VOO_RESERVA_IDA" type="TIME"/>
+        </addColumn>
+
+        <addColumn tableName="CONTRATACAO">
+            <column name="ETICKET_RESERVA_VOLTA" type="VARCHAR(25)"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="ASSENTO_RESERVA_VOLTA" type="CHAR(4)"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="HORARIO_EMBARQUE_RESERVA_VOLTA" type="DATETIME"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="NUMERO_VOO_RESERVA_VOLTA" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="CONTRATACAO">
+            <column name="HORARIO_VOO_RESERVA_VOLTA" type="TIME"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251104005900" author="dev">
+        <sql>update CONTRATACAO c, RESERVA_VOO ida, RESERVA_VOO volta
+             set c.ETICKET_RESERVA_IDA = ida.ETICKET,
+                 c.ASSENTO_RESERVA_IDA = ida.ASSENTO,
+                 c.HORARIO_EMBARQUE_RESERVA_IDA = ida.HORARIO_EMBARQUE,
+                 c.NUMERO_VOO_RESERVA_IDA = ida.NUMERO_VOO,
+                 c.HORARIO_VOO_RESERVA_IDA = ida.HORARIO_VOO,
+                 c.ETICKET_RESERVA_VOLTA = volta.ETICKET,
+                 c.ASSENTO_RESERVA_VOLTA = volta.ASSENTO,
+                 c.HORARIO_EMBARQUE_RESERVA_VOLTA = volta.HORARIO_EMBARQUE,
+                 c.NUMERO_VOO_RESERVA_VOLTA = volta.NUMERO_VOO,
+                 c.HORARIO_VOO_RESERVA_VOLTA = volta.HORARIO_VOO
+             where c.RESERVA_VOO_IDA_ID = ida.ID and
+                   c.RESERVA_VOO_VOLTA_ID = volta.ID
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251104010200" author="dev">
+        <dropForeignKeyConstraint baseTableName="CONTRATACAO" constraintName="FK_COMPRA_RESERVA_VOO_IDA"/>
+        <dropColumn tableName="CONTRATACAO" columnName="RESERVA_VOO_IDA_ID"/>
+        <dropForeignKeyConstraint baseTableName="CONTRATACAO" constraintName="FK_COMPRA_RESERVA_VOO_VOLTA"/>
+        <dropColumn tableName="CONTRATACAO" columnName="RESERVA_VOO_VOLTA_ID"/>
+    </changeSet>
+
+    <changeSet id="20251104010230" author="dev">
+        <dropTable tableName="RESERVA_VOO"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20251105165100" author="dev">
+        <renameColumn tableName="CONTRATACAO" oldColumnName="VALOR_TOTAL" newColumnName="VALOR_TOTAL_MONTANTE" columnDataType="NUMERIC(18,5)"/>
+    </changeSet>
+
+    <changeSet id="202511051655100" author="dev">
+        <addColumn tableName="CONTRATACAO">
+            <column name="VALOR_TOTAL_MOEDA" type="CHAR(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="202511051655600" author="dev">
+        <update tableName="CONTRATACAO">
+            <column name="VALOR_TOTAL_MOEDA" value="BRL"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="20251105172700" author="dev">
+        <renameColumn tableName="CONTRATACAO" oldColumnName="VALOR_DESCONTO" newColumnName="VALOR_DESCONTO_MONTANTE" columnDataType="NUMERIC(18,5)"/>
+    </changeSet>
+
+    <changeSet id="20251105172701" author="dev">
+        <addColumn tableName="CONTRATACAO">
+            <column name="VALOR_DESCONTO_MOEDA" type="CHAR(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251105172702" author="dev">
+        <update tableName="CONTRATACAO">
+            <column name="VALOR_DESCONTO_MOEDA" value="BRL"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="20251105191800" author="dev">
+        <renameColumn tableName="CONTRATACAO" oldColumnName="VALOR_PAGO" newColumnName="VALOR_PAGO_MONTANTE" columnDataType="NUMERIC(18,5)"/>
+    </changeSet>
+
+    <changeSet id="20251105191801" author="dev">
+        <addColumn tableName="CONTRATACAO">
+            <column name="VALOR_PAGO_MOEDA" type="CHAR(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251105191802" author="dev">
+        <update tableName="CONTRATACAO">
+            <column name="VALOR_PAGO_MOEDA" value="BRL"/>
+        </update>
+    </changeSet>
+
+
+    <changeSet id="20251105234100" author="dev">
+        <renameColumn tableName="OFERTA" oldColumnName="PRECO" newColumnName="PRECO_MONTANTE" columnDataType="NUMERIC(18,5)"/>
+    </changeSet>
+
+    <changeSet id="20251105234101" author="dev">
+        <addColumn tableName="OFERTA">
+            <column name="PRECO_MOEDA" type="CHAR(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251105234102" author="dev">
+        <update tableName="OFERTA">
+            <column name="PRECO_MOEDA" value="BRL"/>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

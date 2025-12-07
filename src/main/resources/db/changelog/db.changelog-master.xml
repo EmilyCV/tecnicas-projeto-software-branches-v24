@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <include file="core/20250816-create-tables.xml" relativeToChangelogFile="true"/>
+    <include file="core/20250816-load-data.xml" relativeToChangelogFile="true"/>
+    <include file="core/20251009-database-refactoring.xml" relativeToChangelogFile="true"/>
+
+    <include file="hotelaria/20250110-create-tables.xml" relativeToChangelogFile="true"/>
+    <include file="hotelaria/20250110-load-data.xml" relativeToChangelogFile="true"/>
+
+    <include file="core/20252509-plataforma-ng.xml" relativeToChangelogFile="true"/>
+
+    <include file="veiculo/20251010-create-tables.xml" relativeToChangelogFile="true"/>
+    <include file="veiculo/20251010-load-data.xml" relativeToChangelogFile="true"/>
+
+    <include file="core/20251010-acl-veiculos.xml" relativeToChangelogFile="true"/>
+    <include file="core/20251105-acl-pagamentos.xml" relativeToChangelogFile="true"/>
+
+    <include file="core/20251102-vo-endereco.xml" relativeToChangelogFile="true"/>
+    <include file="core/20251103-dba-changes.xml" relativeToChangelogFile="true"/>
+
+    <include file="core/20251105-moneta-changes.xml" relativeToChangelogFile="true"/>
+
+    <include file="core/20251122-desconto-cliente-fidelizado.xml" relativeToChangelogFile="true"/>
+    <include file="core/20251125-desconto-lote.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

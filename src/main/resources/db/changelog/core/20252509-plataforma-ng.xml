@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20250926193400" author="dev">
+        <modifyDataType tableName="CONTRATACAO" columnName="RESERVA_HOTEL" newDataType="VARCHAR(64)"/>
+    </changeSet>
+
+    <changeSet id="20251002193300" author="dev">
+        <dropColumn tableName="HOTEL_PARCEIRO" columnName="ID_PLATAFORMA"/>
+    </changeSet>
+</databaseChangeLog>

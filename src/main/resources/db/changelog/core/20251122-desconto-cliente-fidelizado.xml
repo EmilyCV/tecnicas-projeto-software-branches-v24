@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20251122180800" author="dev">
+        <addColumn tableName="CLIENTE">
+            <column name="TIPO_DESCONTO" type="VARCHAR(36)"/>
+            <column name="PERCENTUAL_DESCONTO_MAXIMO" type="DOUBLE"/>
+            <column name="FATOR_DESCONTO" type="DOUBLE"/>
+            <column name="PERIODO_CONTRATACOES_DESCONTO" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251122181700" author="dev">
+        <loadUpdateData tableName="CLIENTE"
+                        file="20251122-clientes-fidelizado.csv"
+                        relativeToChangelogFile="true"
+                        primaryKey="ID">
+        </loadUpdateData>
+    </changeSet>
+
+    <changeSet id="20251123003400" author="dev">
+        <createIndex tableName="CONTRATACAO" indexName="CONTRATACAO_CLIENTE_MOMENTO_COMPRA_IDX">
+            <column name="CLIENTE_ID"/>
+            <column name="MOMENTO_COMPRA" descending="true"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

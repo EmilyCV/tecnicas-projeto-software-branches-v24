@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20251102235600" author="dev">
+        <addColumn tableName="CLIENTE">
+            <column name="CEP" type="CHAR(8)"/>
+        </addColumn>
+        <addColumn tableName="CLIENTE">
+            <column name="LOCALIDADE_ID" type="CHAR(36)"/>
+        </addColumn>
+        <addColumn tableName="CLIENTE">
+            <column name="LOGRADOURO" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="CLIENTE">
+            <column name="NUMERO" type="INT"/>
+        </addColumn>
+        <addColumn tableName="CLIENTE">
+            <column name="COMPLEMENTO" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="CLIENTE">
+            <column name="BAIRRO" type="VARCHAR(255)"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="CLIENTE"
+                                 baseColumnNames="LOCALIDADE_ID"
+                                 referencedTableName="LOCALIDADE" referencedColumnNames="ID"
+                                 constraintName="FK_CLIENTE_LOCALIDADE"/>
+
+    </changeSet>
+
+
+    <changeSet id="20251103000600" author="dev">
+        <addColumn tableName="HOTEL_PARCEIRO">
+            <column name="CEP" type="CHAR(8)"/>
+        </addColumn>
+        <addColumn tableName="HOTEL_PARCEIRO">
+            <column name="LOCALIDADE_ID" type="CHAR(36)"/>
+        </addColumn>
+        <addColumn tableName="HOTEL_PARCEIRO">
+            <column name="LOGRADOURO" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="HOTEL_PARCEIRO">
+            <column name="NUMERO" type="INT"/>
+        </addColumn>
+        <addColumn tableName="HOTEL_PARCEIRO">
+            <column name="COMPLEMENTO" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="HOTEL_PARCEIRO">
+            <column name="BAIRRO" type="VARCHAR(255)"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="HOTEL_PARCEIRO"
+                                 baseColumnNames="LOCALIDADE_ID"
+                                 referencedTableName="LOCALIDADE" referencedColumnNames="ID"
+                                 constraintName="FK_HOTEL_PARCEIRO_LOCALIDADE"/>
+
+    </changeSet>
+
+    <changeSet id="20251103001900" author="dev">
+        <sql>update CLIENTE c, ENDERECO e
+             set c.CEP = e.CEP,
+                 c.LOCALIDADE_ID = e.LOCALIDADE_ID,
+                 c.LOGRADOURO = e.LOGRADOURO,
+                 c.NUMERO = e.NUMERO,
+                 c.COMPLEMENTO = e.COMPLEMENTO,
+                 c.BAIRRO = e.BAIRRO
+             where c.ENDERECO_ID = e.ID
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251103002100" author="dev">
+        <sql>
+            update HOTEL_PARCEIRO h, ENDERECO e
+            set h.CEP = e.CEP,
+                h.LOCALIDADE_ID = e.LOCALIDADE_ID,
+                h.LOGRADOURO = e.LOGRADOURO,
+                h.NUMERO = e.NUMERO,
+                h.COMPLEMENTO = e.COMPLEMENTO,
+                h.BAIRRO = e.BAIRRO
+            where h.ENDERECO_ID = e.ID
+
+        </sql>
+    </changeSet>
+
+    <changeSet id="20251103002102" author="dev">
+        <dropForeignKeyConstraint baseTableName="CLIENTE" constraintName="FK_CLIENTE_ENDERECO"/>
+        <dropColumn tableName="CLIENTE" columnName="ENDERECO_ID"/>
+    </changeSet>
+
+    <changeSet id="20251103002103" author="dev">
+        <dropForeignKeyConstraint baseTableName="HOTEL_PARCEIRO" constraintName="FK_HOTEL_PARCEIRO_ENDERECO"/>
+        <dropColumn tableName="HOTEL_PARCEIRO" columnName="ENDERECO_ID"/>
+    </changeSet>
+    <changeSet id="20251103002200" author="dev">
+        <dropTable tableName="ENDERECO"/>
+    </changeSet>
+
+</databaseChangeLog>
