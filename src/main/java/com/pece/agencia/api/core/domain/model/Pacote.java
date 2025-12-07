@@ -37,18 +37,18 @@ public class Pacote {
     private Localidade destino;
 
     @Embedded
-    @AttributeOverride(name="valor", column = @Column(name = "DISPONIBILIDADE"))
+    @AttributeOverride(name = "valor", column = @Column(name = "DISPONIBILIDADE"))
     private Disponibilidade disponibilidade;
 
     @Embedded
-    @AttributeOverride(name="valor", column = @Column(name = "PERCENTUAL_DESCONTO"))
+    @AttributeOverride(name = "valor", column = @Column(name = "PERCENTUAL_DESCONTO"))
     private Percentual percentualDesconto;
 
     @OneToMany
     @JoinColumn(name = "PACOTE_ID")
     private List<Oferta> ofertas;
 
-    @Column(name="DURACAO_VIAGEM")
+    @Column(name = "DURACAO_VIAGEM")
     @Convert(converter = PeriodToDaysConverter.class)
     private Period duracaoViagem;
 
@@ -60,6 +60,14 @@ public class Pacote {
     @AttributeOverride(name = "inicio", column = @Column(name = "INICIO_VALIDADE"))
     @AttributeOverride(name = "fim", column = @Column(name = "FIM_VALIDADE"))
     private Periodo validade;
+
+    @Column(name = "PERIODO_DESCONTO_LOTE")
+    @Convert(converter = PeriodToDaysConverter.class)
+    private Period periodoDescontoLote;
+
+    @Embedded
+    @AttributeOverride(name = "valor", column = @Column(name = "PERCENTUAL_DESCONTO_LOTE_MAXIMO"))
+    private Percentual percentualDescontoLoteMaximo;
 
     public Periodo periodoViagemIniciandoEm(LocalDate dataIda) {
         Periodo periodoViagem = new Periodo(dataIda, dataIda.plus(getDuracaoViagem()));
@@ -79,15 +87,18 @@ public class Pacote {
     }
 
     public MonetaryAmount getValorDescontoPromocional() {
-        return getValorDescontoPromocional(LocalDate.now());
+        return getValorDescontoPromocional(LocalDate.now(), 0);
     }
 
-    public MonetaryAmount getValorDescontoPromocional(LocalDate dataCompra) {
+    public MonetaryAmount getValorDescontoPromocional(LocalDate dataCompra, int numeroContratacoesEmLote) {
         if (this.tipoDesconto == TipoDescontoPacote.FIXO) {
             return this.percentualDesconto.aplicar(getPrecoBase());
         } else if (this.tipoDesconto == TipoDescontoPacote.POR_ANTECIPACAO) {
             long diasAntecedencia = java.time.temporal.ChronoUnit.DAYS.between(dataCompra, this.validade.inicio());
             Percentual descontoAjustado = percentualDesconto.max(percentualDesconto.multiplicar(diasAntecedencia / 30.0));
+            return descontoAjustado.aplicar(getPrecoBase());
+        } else if (this.tipoDesconto == TipoDescontoPacote.LOTE) {
+            Percentual descontoAjustado = percentualDescontoLoteMaximo.min(percentualDesconto.multiplicar(numeroContratacoesEmLote));
             return descontoAjustado.aplicar(getPrecoBase());
         } else {
             throw new IllegalArgumentException("Tipo de desconto desconhecido " + this.tipoDesconto);
@@ -96,17 +107,18 @@ public class Pacote {
 
     public <T extends Oferta> T ofertaDoTipo(Class<T> clazz) {
         return (T) ofertas.stream()
-                        .filter(item -> clazz.isInstance(item))
-                        .findFirst()
-                        .orElse(null);
+                .filter(item -> clazz.isInstance(item))
+                .findFirst()
+                .orElse(null);
     }
+
     public MonetaryAmount getValorTotalAPagar() {
         return getPrecoBase().subtract(getValorDescontoPromocional());
     }
 
     public MonetaryAmount getPrecoBase() {
         return ofertas.stream()
-                      .map(Oferta::getPreco)
-                      .reduce(ZERO_BRL, MonetaryAmount::add);
+                .map(Oferta::getPreco)
+                .reduce(ZERO_BRL, MonetaryAmount::add);
     }
 }

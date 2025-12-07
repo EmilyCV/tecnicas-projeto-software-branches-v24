@@ -17,7 +17,7 @@ public class CalculadoraDesconto {
     private final ContratacaoRepository contratacaoRepository;
 
     public MonetaryAmount getValorDescontoPromocional(Cliente cliente, Pacote pacote, LocalDate dataCompra) {
-        MonetaryAmount descontoPacote = pacote.getValorDescontoPromocional(dataCompra);
+        MonetaryAmount descontoPacote = pacote.getValorDescontoPromocional(dataCompra, contratacoesEmLote(cliente, pacote));
         MonetaryAmount descontoCliente = cliente.getValorDescontoPromocional(pacote.getPrecoBase(), contratacoesElegiveis(cliente));
         return max(descontoPacote, descontoCliente);
     }
@@ -28,6 +28,15 @@ public class CalculadoraDesconto {
         } else {
             LocalDate inicioElegibilidade = LocalDate.now().minus(cliente.getPeriodoContratacoesDesconto());
             return this.contratacaoRepository.countContratacoesApos(cliente.getId(), inicioElegibilidade);
+        }
+    }
+
+    private int contratacoesEmLote(Cliente cliente, Pacote pacote) {
+        if (pacote.getPeriodoDescontoLote() == null) {
+            return 0;
+        } else {
+            LocalDate inicioElegibilidade = LocalDate.now().minus(pacote.getPeriodoDescontoLote());
+            return this.contratacaoRepository.countContratacoesApos(cliente.getId(), pacote.getId(), inicioElegibilidade);
         }
     }
 }
