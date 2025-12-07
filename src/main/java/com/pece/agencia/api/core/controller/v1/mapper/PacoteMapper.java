@@ -4,6 +4,7 @@ import com.pece.agencia.api.core.domain.model.Pacote;
 import com.pece.agencia.api.core.domain.model.TipoDescontoPacote;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.ValueMapping;
 
 import java.time.Period;
@@ -32,6 +33,7 @@ public interface PacoteMapper {
 
     @ValueMapping(target = "COMPRA_ANTECIPADA", source = "POR_ANTECIPACAO")
     @ValueMapping(target = "FIXO", source = "FIXO")
+    @ValueMapping(target = MappingConstants.NULL, source = MappingConstants.ANY_REMAINING)
     com.pece.agencia.api.core.controller.v1.dto.Pacote.TipoDescontoEnum toDto(TipoDescontoPacote source);
 
     default int toDto(Period duracaoViagem) {

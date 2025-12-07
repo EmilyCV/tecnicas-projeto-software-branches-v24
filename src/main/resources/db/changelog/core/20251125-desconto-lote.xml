@@ -4,4 +4,19 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20251125180600" author="dev">
+        <addColumn tableName="PACOTE">
+            <column name="PERCENTUAL_DESCONTO_LOTE_MAXIMO" type="DOUBLE"/>
+            <column name="PERIODO_DESCONTO_LOTE" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20251125181900" author="dev">
+        <loadUpdateData tableName="PACOTE"
+                        file="20251125-pacotes-com-desconto-lote.csv"
+                        relativeToChangelogFile="true"
+                        primaryKey="ID">
+        </loadUpdateData>
+    </changeSet>
 </databaseChangeLog>

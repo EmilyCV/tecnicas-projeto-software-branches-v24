@@ -20,4 +20,7 @@ public interface ContratacaoRepository extends JpaRepository<Contratacao, UUID> 
 
     @Query(value = "select count(c) from Contratacao c where c.cliente.id = :clientId and c.momentoCompra >= :inicioElegibilidade")
     int countContratacoesApos(UUID clientId, LocalDate inicioElegibilidade);
+
+    @Query(value = "select count(c) from Contratacao c where c.cliente.id = :clientId and c.pacoteContratado.id = :pacoteId  and c.momentoCompra >= :inicioElegibilidade")
+    int countContratacoesApos(UUID clientId, UUID pacoteId, LocalDate inicioElegibilidade);
 }
